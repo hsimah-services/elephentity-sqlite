@@ -4,7 +4,7 @@ Experimental SQLite storage for Elephentity's PHP runtime, extracted from Clog's
 standalone backend. It uses PDO and implements `StorageAdaptor`; generated PHP
 entities keep using `elephentity/runtime`. WordPress is not a dependency.
 
-This is an experimental import, not a release. Clog is still developing the
+This package is published as an experimental alpha. Clog is still developing the
 implementation. [Source provenance](docs/clog-source.json) records exact file hashes
 and the Clog commit against which they were verified (`fb57b3c`).
 Original source licensing is preserved in [CLOG-LICENSE](CLOG-LICENSE).
@@ -16,9 +16,9 @@ Original source licensing is preserved in [CLOG-LICENSE](CLOG-LICENSE).
 - `Manifest/StorageManifest`: tables, columns, indexes and edge placements.
 - `Sql`: query compilation and schema metadata.
 
-PHP 8.3+, PDO SQLite, mbstring and `elephentity/runtime ^0.10` are required.
-The Composer package name is `elephentity/sqlite`; no published release is assumed.
-Use a Composer path or VCS repository while developing it.
+PHP 8.3+, PDO SQLite, mbstring and `elephentity/runtime ^0.10 || ^0.11` are required.
+The Composer package name is `elephentity/sqlite`. Runtime 0.11 support is prepared
+for `0.1.0-alpha.2`; `0.1.0-alpha.1` requires runtime 0.10.
 
 The generic GraphQL PHP integration is a separate sibling repository,
 `elephentity-graphql-php`, with Composer name `elephentity/graphql`.
@@ -40,12 +40,23 @@ files against their recorded imports. Exit 0 means unchanged, 1 means changes an
 means invalid input. It never imports changes automatically. Review a changed file,
 copy the accepted version, update its source hash, then rerun the tests.
 
-The test command copies Clog's standalone fixture to a temporary directory,
-replaces its two integration packages with these checkouts, and runs its adapter conformance, integration
-and HTTP suites in disposable containers. The live Clog checkout is never modified.
-Tests require Podman and the `localhost/clog-php:8.3-rust` image (`--image` overrides
-it). They use Clog's bundled runtime and webonyx dependencies; Composer dependency
-resolution and compatibility against other versions are separate release checks.
+The test command copies Clog's standalone fixture and generated entities to a
+temporary directory. It resolves and installs fresh Composer dependencies for
+runtime **0.10.0 and 0.11.0**, using the two local integration checkouts, then runs
+adapter conformance, schema-upgrade, integration and HTTP suites for each version.
+It checks the resolved versions in the lockfile. Clog's checkout is never modified.
+Tests require Podman, network access for Composer and the
+`localhost/clog-php:8.3-rust` image (`--image` overrides it).
+
+Use `--runtime 0.11.0` to check one runtime. After publishing both integration
+packages, verify the published artifacts with:
+
+```sh
+python3 tools/test-clog.py ~/Projects/clog --package-version 0.1.0-alpha.2
+```
+
+See [runtime compatibility validation](docs/runtime-compatibility.md) for the
+release evidence and fixture revision.
 
 Session monitoring is performed by the active agent. No background service or
 scheduled job is installed by this repository.
