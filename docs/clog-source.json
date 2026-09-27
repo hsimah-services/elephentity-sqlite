@@ -1,5 +1,5 @@
 {
-  "source": "hsimah-services/clog",
+  "source": "hsimah/clog",
   "branch": "feature/standalone-sqlite",
   "head": "3c8d7b1b3dd502e7c8c524c56c8c0ee62348392d",
   "capturedAt": "2026-09-27T04:22:22.781699+00:00",

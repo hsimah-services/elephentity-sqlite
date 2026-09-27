@@ -41,7 +41,7 @@ means invalid input. It never imports changes automatically. Review a changed fi
 copy the accepted version, update its source hash, then rerun the tests.
 
 The test command copies Clog's standalone fixture to a temporary directory,
-replaces its two integration packages with these checkouts, and runs its integration
+replaces its two integration packages with these checkouts, and runs its adapter conformance, integration
 and HTTP suites in disposable containers. The live Clog checkout is never modified.
 Tests require Podman and the `localhost/clog-php:8.3-rust` image (`--image` overrides
 it). They use Clog's bundled runtime and webonyx dependencies; Composer dependency

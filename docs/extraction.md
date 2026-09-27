@@ -12,7 +12,9 @@ Clog's integration and HTTP suites passed with both extracted packages substitut
 into a disposable fixture. Coverage includes CRUD, nullable updates, uniqueness,
 nested rollback, read/write policies, Relay pagination, Node identity, mutations,
 cascades, foreign keys, session cookies and CSRF. This establishes Clog compatibility
-for the captured implementation; it is not full storage-adapter conformance.
+for the captured implementation. The runtime adapter conformance harness also
+passes for OneToOne, ManyToOne, OneToMany and ManyToMany; this is not exhaustive
+coverage of concurrency or all pending-ID and unlink edge cases.
 
 ## Remaining work before a general release
 
@@ -24,8 +26,8 @@ for the captured implementation; it is not full storage-adapter conformance.
 3. Implement SQLite DDL and migrations. `Column::definition()` now rejects
    auto-increment columns and requires an explicit migration. Clog installs tables
    through application-owned SQL. There is no generic SQLite schema installer yet.
-4. Add independent adapter conformance tests, including many-to-many edges, writes
-   using pending IDs, rollback on constraint failure and pagination boundaries.
+4. Extend the passing runtime adapter conformance harness with package-owned tests
+   for pending IDs, rollback on constraint failure and pagination boundaries.
    Reconcile the query compiler's 1000-row clamp with the adaptor's requested limit.
 5. Validate mapped identifiers consistently. Query values are bound, but several
    adaptor/compiler paths interpolate manifest identifiers between backticks.
@@ -54,3 +56,10 @@ Do not infer that Clog has finished from an unchanged poll or a passing test run
 Clog committed the standalone implementation as `fb57b3c`. Every imported library
 file matches that commit. The disposable integration and HTTP suites also passed
 with Clog's updated manifests and viewer. Development continues on the same branch.
+
+## Upstream scope
+
+[elephentity#89](https://github.com/hsimah-services/elephentity/issues/89) tracks
+SQLite and schema generation. It also records a core-runtime deletion-planner
+direction issue: Clog currently uses a narrow `DependentReadStorage` wrapper.
+Resolve that behavior in the runtime instead of duplicating it in this adapter.

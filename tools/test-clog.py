@@ -22,7 +22,7 @@ with tempfile.TemporaryDirectory(prefix='eleph-clog-tests-') as tmp:
         destination = fixture / 'server/standalone/vendor/elephentity' / name / 'src'
         shutil.rmtree(destination)
         shutil.copytree(workspace / ('elephentity-sqlite' if name == 'sqlite' else 'elephentity-graphql-php') / 'src', destination)
-    for test in ('integration', 'http'):
+    for test in ('conformance', 'integration', 'http'):
         subprocess.run(['podman', 'run', '--rm', '--network=none', '--security-opt=label=disable',
                         '-v', f'{fixture}:/fixture:ro', '-w', '/fixture/server', args.image,
                         'php', f'standalone/tests/{test}.php'], check=True)
