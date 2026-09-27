@@ -4,9 +4,9 @@ Experimental SQLite storage for Elephentity's PHP runtime, extracted from Clog's
 standalone backend. It uses PDO and implements `StorageAdaptor`; generated PHP
 entities keep using `elephentity/runtime`. WordPress is not a dependency.
 
-This is an initial working-tree import, not a release. Clog is still developing the
-implementation. [Source provenance](docs/clog-source.json) records the exact file
-hashes: the recorded Git HEAD alone does not contain this uncommitted work.
+This is an experimental import, not a release. Clog is still developing the
+implementation. [Source provenance](docs/clog-source.json) records exact file hashes
+and the Clog commit against which they were verified (`fb57b3c`).
 Original source licensing is preserved in [CLOG-LICENSE](CLOG-LICENSE).
 
 ## Package boundary

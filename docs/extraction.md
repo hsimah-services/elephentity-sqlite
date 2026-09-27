@@ -48,3 +48,9 @@ importing them; avoid overwriting local package work or modifying Clog's checkou
 Changes outside the two packages (especially Application, Schema, GraphQL, manifests
 and tests) must also be reviewed because they may reveal missing generic behavior.
 Do not infer that Clog has finished from an unchanged poll or a passing test run.
+
+## Source commit verified
+
+Clog committed the standalone implementation as `fb57b3c`. Every imported library
+file matches that commit. The disposable integration and HTTP suites also passed
+with Clog's updated manifests and viewer. Development continues on the same branch.

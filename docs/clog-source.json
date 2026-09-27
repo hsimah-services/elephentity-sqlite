@@ -3,7 +3,7 @@
   "branch": "feature/standalone-sqlite",
   "head": "3c8d7b1b3dd502e7c8c524c56c8c0ee62348392d",
   "capturedAt": "2026-09-27T04:22:22.781699+00:00",
-  "status": "Uncommitted working tree prototype; hashes identify the actual imported files.",
+  "status": "Imported from the working tree; all imported source hashes now verified against verifiedSourceCommit.",
   "path": "server/standalone/vendor/elephentity/sqlite",
   "files": {
     "LICENSE": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30",
@@ -18,5 +18,7 @@
     "src/Sql/Naming.php": "61bb352de3763e0a4114c37ad03a5b78f885dc8dd11f59e20c412186637eb28a",
     "src/Sql/QueryCompiler.php": "1b64fb0d2e89b574f3d8081c0178b78226af18abc61af7453023bd0c8c40c079",
     "src/Sql/TableSchema.php": "f27cd7bdfc6adbad3064d5566ef10d16b2f37f7bdf8cd187b532e638347c728e"
-  }
+  },
+  "verifiedSourceCommit": "fb57b3c5fd54d2faa6759f7fc7a75e828c8c837a",
+  "verifiedAt": "2026-09-27T04:24:57.258818+00:00"
 }
