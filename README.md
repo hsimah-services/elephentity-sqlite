@@ -16,9 +16,10 @@ Original source licensing is preserved in [CLOG-LICENSE](CLOG-LICENSE).
 - `Manifest/StorageManifest`: tables, columns, indexes and edge placements.
 - `Sql`: query compilation and schema metadata.
 
-PHP 8.3+, PDO SQLite, mbstring and `elephentity/runtime ^0.10 || ^0.11` are required.
-The Composer package name is `elephentity/sqlite`. Runtime 0.11 support is prepared
-for `0.1.0-alpha.2`; `0.1.0-alpha.1` requires runtime 0.10.
+PHP 8.3+, PDO SQLite, mbstring and `elephentity/runtime ^0.10 || ^0.11 || ^0.12` are
+required; use runtime 0.11.1 or later (see [compatibility](docs/runtime-compatibility.md)).
+The Composer package name is `elephentity/sqlite`. Runtime 0.12 support is prepared
+for `0.1.0-alpha.3`; `0.1.0-alpha.1` requires runtime 0.10.
 
 The generic GraphQL PHP integration is a separate sibling repository,
 `elephentity-graphql-php`, with Composer name `elephentity/graphql`.
@@ -42,17 +43,17 @@ copy the accepted version, update its source hash, then rerun the tests.
 
 The test command copies Clog's standalone fixture and generated entities to a
 temporary directory. It resolves and installs fresh Composer dependencies for
-runtime **0.10.0 and 0.11.0**, using the two local integration checkouts, then runs
+runtime **0.11.1 and 0.12.0**, using the two local integration checkouts, then runs
 adapter conformance, schema-upgrade, integration and HTTP suites for each version.
 It checks the resolved versions in the lockfile. Clog's checkout is never modified.
 Tests require Podman, network access for Composer and the
 `localhost/clog-php:8.3-rust` image (`--image` overrides it).
 
-Use `--runtime 0.11.0` to check one runtime. After publishing both integration
+Use `--runtime 0.12.0` to check one runtime. After publishing both integration
 packages, verify the published artifacts with:
 
 ```sh
-python3 tools/test-clog.py ~/Projects/clog --package-version 0.1.0-alpha.2
+python3 tools/test-clog.py ~/Projects/clog --package-version 0.1.0-alpha.3
 ```
 
 See [runtime compatibility validation](docs/runtime-compatibility.md) for the

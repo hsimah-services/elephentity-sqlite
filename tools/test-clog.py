@@ -10,12 +10,12 @@ import tempfile
 parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument('clog', type=Path)
 parser.add_argument('--image', default='localhost/clog-php:8.3-rust')
-parser.add_argument('--runtime', action='append', help='Exact runtime version; repeat for a matrix (default: 0.10.0 and 0.11.0)')
+parser.add_argument('--runtime', action='append', help='Exact runtime version; repeat for a matrix (default: 0.11.1 and 0.12.0)')
 parser.add_argument('--package-version', help='Test published integration packages at this version instead of local checkouts')
 args = parser.parse_args()
 workspace = Path(__file__).resolve().parents[2]
 
-for runtime in args.runtime or ['0.10.0', '0.11.0']:
+for runtime in args.runtime or ['0.11.1', '0.12.0']:
     print(f'=== Runtime {runtime} ===', flush=True)
     with tempfile.TemporaryDirectory(prefix='eleph-clog-tests-') as tmp:
         fixture = Path(tmp)
@@ -30,7 +30,7 @@ for runtime in args.runtime or ['0.10.0', '0.11.0']:
             'autoload': original['autoload'],
         }
         manifest['require']['elephentity/runtime'] = runtime
-        version = args.package_version or '0.1.0-alpha.2'
+        version = args.package_version or '0.1.0-alpha.3'
         for name in ('sqlite', 'graphql'):
             manifest['require'][f'elephentity/{name}'] = version
         if not args.package_version:
