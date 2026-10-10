@@ -63,3 +63,16 @@ Session monitoring is performed by the active agent. No background service or
 scheduled job is installed by this repository.
 
 See [the extraction notes](docs/extraction.md) before using this prototype.
+
+## Package regression checks
+
+After installing Composer dependencies, run `composer test` with PHP 8.3 or later.
+The regression script can also use an existing dependency autoloader:
+
+```sh
+php tests/regressions.php /path/to/vendor/autoload.php
+```
+
+Paged queries cap their effective size at 1,000 records, excluding the probe row.
+A zero size returns an empty terminal page; negative sizes are rejected. Targeted
+to-one unlinking clears the relationship only if its current target matches.

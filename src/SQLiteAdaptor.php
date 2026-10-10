@@ -82,6 +82,16 @@ final readonly class SQLiteAdaptor implements StorageAdaptor
 
     public function query(Criteria $criteria): Page
     {
+        if (null !== $criteria->limit) {
+            if ($criteria->limit < 0) {
+                throw new RuntimeException('Page size must be non-negative.');
+            }
+            if (0 === $criteria->limit) {
+                return new Page([]);
+            }
+            $criteria = $criteria->take(min($criteria->limit, QueryCompiler::MAX_LIMIT), $criteria->after);
+        }
+
         $table = $this->table($criteria->entity);
         $compiled = $this->compiler->select($table, $criteria);
 
@@ -232,10 +242,13 @@ final readonly class SQLiteAdaptor implements StorageAdaptor
         }
 
         if ($placement->keyIsLocal()) {
-            $this->database->execute(
-                sprintf('UPDATE `%s` SET `%s` = NULL WHERE `id` = %%d', $placement->table, $placement->localColumn),
-                [$from],
-            );
+            $sql = sprintf('UPDATE `%s` SET `%s` = NULL WHERE `id` = %%d', $placement->table, $placement->localColumn);
+            $bindings = [$from];
+            if (null !== $to) {
+                $sql .= sprintf(' AND `%s` = %%d', $placement->localColumn);
+                $bindings[] = $to;
+            }
+            $this->database->execute($sql, $bindings);
 
             return;
         }

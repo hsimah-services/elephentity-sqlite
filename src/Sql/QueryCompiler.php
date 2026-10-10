@@ -22,7 +22,7 @@ use RuntimeException;
  */
 final readonly class QueryCompiler
 {
-    private const MAX_LIMIT = 1000;
+    public const MAX_LIMIT = 1000;
 
 
     public function __construct(
