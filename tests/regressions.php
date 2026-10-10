@@ -48,3 +48,36 @@ check($zero->items === [] && !$zero->hasMore(), 'A zero page has a non-advancing
 try { $adaptor->query($criteria->take(-1)); throw new LogicException('A negative page was accepted.'); }
 catch (RuntimeException $error) { check(str_contains($error->getMessage(), 'non-negative'), 'Unexpected negative-page failure.'); }
 echo "PASS: targeted unlink, oversized pages, zero and negative page sizes\n";
+
+$database = new Database(':memory:');
+$database->execute('CREATE TABLE post (id INTEGER PRIMARY KEY, rank INTEGER, allowed INTEGER)');
+$database->execute('CREATE INDEX rank_reverse_id ON post(rank, id DESC)');
+$database->execute('PRAGMA reverse_unordered_selects = ON');
+for ($id = 250; $id > 0; --$id) $database->execute('INSERT INTO post(id, rank, allowed) VALUES (%d, %d, 1)', [$id, $id % 3]);
+$adaptor = new SQLiteAdaptor($database, ['Post' => new TableSchema('post', ['id' => new Column('id', 'INTEGER'), 'rank' => new Column('rank', 'INTEGER'), 'allowed' => new Column('allowed', 'INTEGER')])], new FieldMap([]));
+foreach ([Criteria::for('Post'), Criteria::for('Post')->orderBy(Order::ascending('rank'))] as $criteria) {
+    $expected = range(1, 250);
+    if ($criteria->order !== []) usort($expected, static fn (int $a, int $b): int => ($a % 3 <=> $b % 3) ?: ($a <=> $b));
+    $seen = []; $cursor = null;
+    for ($step = 0; $step < 20; ++$step) {
+        $page = $adaptor->query($criteria->take(17, $cursor));
+        foreach ($page->items as $row) $seen[] = (int) $row->id->raw();
+        $cursor = $page->next;
+        if ($cursor === null) break;
+    }
+    check($seen === $expected && $cursor === null, 'Stable SQLite pages repeated or skipped tied/unordered rows.');
+}
+echo "PASS: stable tied and no-order SQLite paging with reversed unordered selects\n";
+
+$database = new Database(':memory:');
+$database->execute('CREATE TABLE owner (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, rank INTEGER)');
+$database->execute('CREATE TABLE target (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT)');
+$database->execute('CREATE TABLE owner_target (owner_id INTEGER, target_id INTEGER, PRIMARY KEY (owner_id, target_id))');
+$placement = new EdgePlacement('Owner', 'targets', 'Target', RelationKind::ManyToMany, 'owner_target', 'owner_id', 'target_id');
+$adaptor = new SQLiteAdaptor($database, [
+    'Owner' => new TableSchema('owner', ['id' => new Column('id', 'INTEGER'), 'name' => new Column('name', 'TEXT'), 'rank' => new Column('rank', 'INTEGER')]),
+    'Target' => new TableSchema('target', ['id' => new Column('id', 'INTEGER'), 'name' => new Column('name', 'TEXT')]),
+], new FieldMap([]), ['Owner.targets' => $placement], new \Eleph\SQLite\Sql\QueryCompiler(placements: ['Owner.targets' => $placement]));
+$failures = (new \Eleph\Runtime\Storage\Testing\AdaptorConformance())->check($adaptor, 'Owner', 'targets', 'Target', sharedTargets: true);
+check($failures === [], implode('; ', $failures));
+echo "PASS: strict shared conformance including repeated targets in parent batches\n";
