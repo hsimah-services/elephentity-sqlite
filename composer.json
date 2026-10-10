@@ -14,5 +14,8 @@
         "psr-4": {
             "Eleph\\SQLite\\": "src/"
         }
+    },
+    "scripts": {
+        "test": "@php tests/regressions.php"
     }
 }
