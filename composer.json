@@ -2,7 +2,7 @@
     "name": "elephentity/sqlite",
     "description": "Experimental SQLite storage adaptor for the Elephentity PHP runtime.",
     "type": "library",
-    "license": "Apache-2.0",
+    "license": "MIT",
     "require": {
         "php": ">=8.3",
         "elephentity/runtime": "^0.13.1",
